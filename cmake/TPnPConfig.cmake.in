@@ -1,0 +1,10 @@
+@PACKAGE_INIT@
+
+# Include CMake's package config helpers to use find_dependency
+include(CMakeFindDependencyMacro)
+
+include("${CMAKE_CURRENT_LIST_DIR}/TPnPTargets.cmake")
+
+# Ensure that Eigen3 and OpenCV targets are available
+find_dependency(Eigen3 REQUIRED)
+find_dependency(OpenCV REQUIRED)

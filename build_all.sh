@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Default configuration
 BUILD_TYPE="release"
@@ -35,17 +35,23 @@ cd $SCRIPT_DIR
 # unset http_proxy
 # unset https_proxy
 
-# Build MyLib library
-echo "Building MyLib library with build type: $BUILD_TYPE..."
+# Build TPnP library
+echo "Building TPnP library with build type: $BUILD_TYPE..."
 cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -B build -S . && cmake --build build
 
-# Install MyLib library
-echo "Installing MyLib library..."
+# Install TPnP library
+echo "Installing TPnP library..."
 cmake --install build --prefix build/install
 
 # Build example project
 echo "Building example project..."
 cmake -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_PREFIX_PATH=../build/install -B example/build -S example/ && cmake --build example/build
+
+# Make sure shared libraries needed by TPnP can be found by the dynamic link loader during runtime.
+# For TPnP this is basically OpenCV. This line is not needed if OpenCV can already be found by the
+# dynamic link loader, which is the case if for instance it has already been installed at system level.
+# This is needed to run the C++ as well as the Python code.
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${SCRIPT_DIR}/build/install/lib
 
 # Run C++ example
 echo "Running C++ example..."
